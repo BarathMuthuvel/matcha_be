@@ -1,0 +1,22 @@
+{
+  "name": "matcha_be",
+  "version": "1.0.0",
+  "description": "Matcha for Dev",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BarathMuthuvel/matcha_be.git"
+  },
+  "author": "Barath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BarathMuthuvel/matcha_be/issues"
+  },
+  "homepage": "https://github.com/BarathMuthuvel/matcha_be#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
