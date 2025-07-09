@@ -1,0 +1,56 @@
+const express = require('express');
+const { validateUserInput } = require("../utils/validation");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
+
+const authRouter = express.Router();
+
+authRouter.post("/signup", async (req, res) => {
+  try {
+    const { errors, isValid } = validateUserInput(req);
+    if (!isValid) {
+      return res.status(400).send({ message: "Validation failed", errors });
+    }
+
+    const { firstName, lastName, emailId, password, age, gender } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: hashedPassword,
+      age,
+      gender,
+    });
+    await newUser.save();
+    res.status(201).send({ message: "User registered successfully" });
+  } catch (error) {
+    res.status(500).send({ message: error.message || "Internal server error" });
+  }
+});
+
+authRouter.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const isMatch = await user.validatePassword(password);
+    if (isMatch) {
+      const token = await user.getJWT(); // Generate JWT token
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 3600000),
+        httpOnly: true,
+      }); // Set cookie with token
+      res.status(200).send({ message: "Login successful" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error" });
+  }
+});
+
+
+module.exports = authRouter;
