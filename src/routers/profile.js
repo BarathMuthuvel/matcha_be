@@ -1,10 +1,11 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
-const User = require("../models/user");
+const { validateEditProfileInput } = require("../utils/validation");
+const bcrypt = require("bcrypt");
 
 const profileRouter = express.Router();
 
-profileRouter.get("/profile", userAuth, async (req, res) => {
+profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
 
@@ -14,45 +15,36 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.get("/users", async (req, res) => {
+profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).send(users);
+    if (!validateEditProfileInput(req)) {
+      return res.status(400).send({ message: "Validation failed" });
+    }
+
+    const user = req.user;
+    Object.assign(user, req.body);
+    await user.save();
+
+    res.status(200).send({ message: "Edit profile", user });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
   }
 });
 
-profileRouter.delete("/users", async (req, res) => {
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
   try {
-    const userId = req.body.id;
-    const deletedUser = await User.findByIdAndDelete(userId);
+    const { currentPassword, newPassword } = req.body;
 
-    if (!deletedUser) {
-      return res.status(404).send({ message: "User not found" });
+    // Validate the current password and update to the new password
+    const user = req.user;
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).send({ message: "Current password is incorrect" });
     }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
 
-    res.status(200).send({ message: "User deleted successfully" });
-  } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
-  }
-});
-
-profileRouter.patch("/users/:id", async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const data = req.body;
-
-    const updatedUser = await User.findByIdAndUpdate(userId, data, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!updatedUser) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    res.status(200).send(updatedUser);
+    res.status(200).send({ message: "Password updated successfully" });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
   }

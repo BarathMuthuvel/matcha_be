@@ -40,6 +40,19 @@ const validateUserInput = (req) => {
   };
 };
 
+const validateEditProfileInput = (req) => {
+  const allowedEditFields = ["firstName", "lastName", "age", "gender"];
+
+  const isEditAllowed = Object.keys(req.body).every((key) =>
+    allowedEditFields.includes(key)
+  );
+
+  return {
+    isEditAllowed,
+  };
+};
+
 module.exports = {
   validateUserInput,
+  validateEditProfileInput,
 };

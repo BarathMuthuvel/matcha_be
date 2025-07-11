@@ -7,17 +7,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    index: true, // Index for faster search
   },
   lastName: {
     type: String,
     required: true,
     trim: true,
+    index: true, 
   },
   emailId: {
     type: String,
     required: true,
     trim: true,
-    unique: true,
+    unique: true, // Ensure email is unique
+    lowercase: true, // Store email in lowercase
   },
   password: {
     type: String,
@@ -41,6 +44,8 @@ const userSchema = new mongoose.Schema({
     },
   },
 });
+
+userSchema.index({ firstName: 1, lastName: 1 }); // Compound index for faster search by name
 
 //Schema methods
 userSchema.methods.getJWT = async function () {
