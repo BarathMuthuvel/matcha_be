@@ -2,9 +2,9 @@ const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const { validateEditProfileInput } = require("../utils/validation");
 const bcrypt = require("bcrypt");
-
 const profileRouter = express.Router();
 
+// Endpoint to view the profile of the logged-in user
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
@@ -15,6 +15,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
   }
 });
 
+// Endpoint to edit the profile of the logged-in user
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   try {
     if (!validateEditProfileInput(req)) {
@@ -31,6 +32,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
+// Endpoint to change the password of the logged-in user
 profileRouter.patch("/profile/password", userAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;

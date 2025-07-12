@@ -6,11 +6,13 @@ const connectionRequestSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       unique: true, // Ensure fromUserId is unique
+      ref: "User", // Reference to User model
     },
     toUserId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       unique: true, // Ensure toUserId is unique
+      ref: "User", // Reference to User model
     },
     status: {
       type: String,

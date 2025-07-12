@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const { validateUserInput } = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-
 const authRouter = express.Router();
 
+// Endpoint to register a new user
 authRouter.post("/signup", async (req, res) => {
   try {
     const { errors, isValid } = validateUserInput(req);
@@ -30,6 +30,7 @@ authRouter.post("/signup", async (req, res) => {
   }
 });
 
+// Endpoint to login a user
 authRouter.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
@@ -52,6 +53,7 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
+// Endpoint to logout a user
 authRouter.post("/logout", (req, res) => {
   try {
     res.clearCookie("token"); // Clear the cookie
@@ -60,6 +62,5 @@ authRouter.post("/logout", (req, res) => {
     res.status(500).send({ message: "Internal server error" });
   }
 });
-
 
 module.exports = authRouter;
