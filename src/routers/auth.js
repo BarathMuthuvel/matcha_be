@@ -46,7 +46,7 @@ authRouter.post("/login", async (req, res) => {
         expires: new Date(Date.now() + 3600000),
         httpOnly: true,
       }); // Set cookie with token
-      res.status(200).send({ message: "Login successful" });
+      res.status(200).send({ message: "Login successful", User: user });
     }
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });

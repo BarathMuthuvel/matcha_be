@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    index: true, 
+    index: true,
   },
   emailId: {
     type: String,
@@ -26,6 +26,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+  },
+  profilePicture: {
+    type: String,
+    default:
+      "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg", // Default profile picture
+  },
+  bio: {
+    type: String,
+  },
+  skills: {
+    type: [String], // Array of strings for skills
   },
   age: {
     type: Number,
@@ -60,7 +71,10 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
   const user = this;
   const passwordHash = user.password;
 
-  const isPasswordValid = await bcrypt.compare(passwordInputByUser, passwordHash);
+  const isPasswordValid = await bcrypt.compare(
+    passwordInputByUser,
+    passwordHash
+  );
 
   if (!isPasswordValid) {
     throw new Error("Invalid password");
