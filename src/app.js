@@ -10,6 +10,7 @@ app.use(
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 ); // Middleware to enable CORS
+
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
 

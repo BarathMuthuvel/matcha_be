@@ -23,6 +23,13 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     }
 
     const user = req.user;
+    // Convert skills to array if it's a string
+    if (typeof req.body.skills === "string") {
+      req.body.skills = req.body.skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
     Object.assign(user, req.body);
     await user.save();
 
