@@ -47,9 +47,12 @@ authRouter.post("/login", async (req, res) => {
         httpOnly: true,
       }); // Set cookie with token
       res.status(200).send({ message: "Login successful", User: user });
+    } else {
+      return res.status(401).send({ message: "Invalid password" });
     }
   } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
+    console.error("Login error:", error);
+    res.status(500).send({ message: error.message || "Internal server error" });
   }
 });
 
@@ -59,7 +62,8 @@ authRouter.post("/logout", (req, res) => {
     res.clearCookie("token"); // Clear the cookie
     res.status(200).send({ message: "Logout successful" });
   } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
+    console.error("Logout error:", error);
+    res.status(500).send({ message: error.message || "Internal server error" });
   }
 });
 

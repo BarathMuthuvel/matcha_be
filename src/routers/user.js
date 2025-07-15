@@ -4,6 +4,8 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 const userRouter = express.Router();
 
+const userFields = "firstName lastName profilePicture bio skills age gender";
+
 // Get all the pending connection requests sent by the logged-in user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
@@ -11,7 +13,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
     const connectionRequests = await ConnectionRequest.find({
       toUserId: loggedinUserId,
       status: "interested",
-    }).populate("fromUserId", "firstName lastName");
+    }).populate("fromUserId", userFields);
 
     res.status(200).json({
       requests: connectionRequests,
@@ -33,8 +35,8 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         { toUserId: loggedinUserId, status: "accepted" },
       ],
     })
-      .populate("fromUserId", "firstName lastName")
-      .populate("toUserId", "firstName lastName");
+      .populate("fromUserId", userFields)
+      .populate("toUserId", userFields);
 
     const data = connections.map((connection) => {
       if (connection.fromUserId._id.toString() === loggedinUserId.toString()) {
@@ -87,7 +89,10 @@ userRouter.get("/feed", userAuth, async (req, res) => {
         { _id: { $ne: loggedinUserId } }, // Exclude the logged-in user
         { _id: { $nin: Array.from(hideUserFromFeed) } }, // Exclude users in connection requests
       ],
-    }).select("firstName lastName").skip(skip).limit(limit);
+    })
+      .select(userFields)
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
       users: users,
@@ -95,7 +100,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     });
   } catch (error) {
     // Handle errors
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 });
 
