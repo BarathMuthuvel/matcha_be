@@ -4,12 +4,28 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+// CORS configuration
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow requests from this origin
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cookie",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
+    exposedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200,
   })
-); // Middleware to enable CORS
+);
 
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies

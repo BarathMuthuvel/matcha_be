@@ -16,7 +16,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 });
 
 // Endpoint to edit the profile of the logged-in user
-profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+profileRouter.put("/profile/edit", userAuth, async (req, res) => {
   try {
     if (!validateEditProfileInput(req)) {
       return res.status(400).send({ message: "Validation failed" });
