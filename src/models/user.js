@@ -40,12 +40,10 @@ const userSchema = new mongoose.Schema({
   },
   age: {
     type: Number,
-    required: true,
     min: 18, // Assuming age cannot be negative
   },
   gender: {
     type: String,
-    required: true,
     trim: true,
     validate: function (value) {
       const validGenders = ["male", "female", "other"];

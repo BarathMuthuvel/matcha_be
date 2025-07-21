@@ -12,7 +12,7 @@ authRouter.post("/signup", async (req, res) => {
       return res.status(400).send({ message: "Validation failed", errors });
     }
 
-    const { firstName, lastName, emailId, password, age, gender } = req.body;
+    const { firstName, lastName, emailId, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
@@ -20,11 +20,18 @@ authRouter.post("/signup", async (req, res) => {
       lastName,
       emailId,
       password: hashedPassword,
-      age,
-      gender,
     });
-    await newUser.save();
-    res.status(201).send({ message: "User registered successfully" });
+
+    const savedUser = await newUser.save();
+    const token = await savedUser.getJWT(); // Generate JWT token
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 3600000),
+      httpOnly: true,
+    });
+
+    res
+      .status(201)
+      .send({ message: "User registered successfully", User: savedUser });
   } catch (error) {
     res.status(500).send({ message: error.message || "Internal server error" });
   }

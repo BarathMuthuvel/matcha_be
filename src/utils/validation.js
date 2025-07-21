@@ -1,7 +1,7 @@
 const validator = require("validator");
 
 const validateUserInput = (req) => {
-  const { firstName, lastName, emailId, password, age, gender } = req.body;
+  const { firstName, lastName, emailId, password } = req.body;
   const errors = {};
 
   if (!firstName || validator.isEmpty(firstName)) {
@@ -16,22 +16,8 @@ const validateUserInput = (req) => {
     errors.emailId = "Invalid email format";
   }
 
-  if (!password || !validator.isStrongPassword(password, { minLength: 6 })) {
-    errors.password = "Password must be at least 6 characters and strong";
-  }
-
-  if (
-    age === undefined ||
-    age === null ||
-    !validator.isInt(age.toString(), { min: 18 })
-  ) {
-    errors.age = "Age is required and must be at least 18";
-  }
-
-  const validGenders = ["male", "female", "other"];
-  if (!gender || !validGenders.includes(gender)) {
-    errors.gender =
-      "Gender is required and must be one of: male, female, other";
+  if (!password || password.length < 6) {
+    errors.password = "Password must be at least 6 characters long";
   }
 
   return {
@@ -41,15 +27,21 @@ const validateUserInput = (req) => {
 };
 
 const validateEditProfileInput = (req) => {
-  const allowedEditFields = ["firstName", "lastName", "age", "gender"];
+  const allowedEditFields = [
+    "firstName",
+    "lastName",
+    "age",
+    "gender",
+    "bio",
+    "skills",
+    "profilePicture",
+  ];
 
   const isEditAllowed = Object.keys(req.body).every((key) =>
     allowedEditFields.includes(key)
   );
 
-  return {
-    isEditAllowed,
-  };
+  return isEditAllowed;
 };
 
 module.exports = {
