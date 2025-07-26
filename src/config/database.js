@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const mongoURI =
-      "mongodb+srv://matcha:Matcha2025@matcha.bjnyfq5.mongodb.net/?retryWrites=true&w=majority&appName=Matcha";
+    const mongoURI = process.env.MONGODB_URI;
 
     const options = {
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s

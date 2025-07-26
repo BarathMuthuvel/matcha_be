@@ -35,3 +35,15 @@ server_name 3.27.18.138;
     }
 
 sudo systemctl reload nginx
+
+# Sending Emails via ses
+
+- create a iam user
+- Give Access to AmazonSESFullAccess
+- AmasonSES : create an identity
+- verify your domain name
+- verify an email address
+- install aws sdk - v3
+- setup sesClient
+- get Access credientails ket form IAM security
+

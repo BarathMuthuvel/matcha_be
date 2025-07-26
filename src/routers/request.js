@@ -4,6 +4,8 @@ const ConnectionRequest = require("../models/connectionRequest");
 const requestsRouter = express.Router();
 const User = require("../models/user");
 
+const sendEmail = require("../utils/sendEmail");
+
 // Route to send a connection request
 requestsRouter.post(
   "/request/send/:status/:userId",
@@ -67,6 +69,22 @@ requestsRouter.post(
       });
 
       const data = await connectionRequest.save();
+
+      try {
+        const email = await sendEmail.run(
+          "A new connection request" +
+            toUser.firstName +
+            " " +
+            toUser.lastName +
+            " has sent you a connection request"
+        );
+        console.log("Email result:", email);
+      } catch (emailError) {
+        console.error("Email sending failed:", emailError);
+        // Don't fail the entire request if email fails
+        // The connection request was already saved successfully
+      }
+
       res.status(200).send({
         message: "Connection request sent successfully",
         data,
