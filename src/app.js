@@ -6,6 +6,8 @@ const connectDB = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const http = require("http");
+const initializeSocket = require("./utils/socket");
 
 // CORS configuration - simplified approach
 app.use((req, res, next) => {
@@ -47,18 +49,25 @@ const authRouter = require("./routers/auth");
 const profileRouter = require("./routers/profile");
 const requestsRouter = require("./routers/request");
 const userRouter = require("./routers/user");
+const premiumRouter = require("./routers/premium");
+const chatRouter = require("./routers/chat");
 
 // Use routers
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestsRouter);
 app.use("/", userRouter);
+app.use("/", premiumRouter);
+app.use("/", chatRouter);
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 connectDB()
   .then(() => {
     console.log("MongoDB connected");
     // Start the Express server
-    app.listen(9999, () => {
+    server.listen(9999, () => {
       console.log("Server is running on port 9999");
     });
   })

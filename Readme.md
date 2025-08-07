@@ -36,6 +36,21 @@ server_name 3.27.18.138;
 
 sudo systemctl reload nginx
 
+# Adding .env file to prod
+
+Step-by-step:
+
+comment -> sudo nano .env
+
+Press Ctrl + O
+➤ This means "Write Out" (save the file)
+
+Press Enter
+➤ Confirms the file name (should show .env by default)
+
+Press Ctrl + X
+➤ This exits the nano editor
+
 # Sending Emails via ses
 
 - create a iam user
@@ -46,4 +61,17 @@ sudo systemctl reload nginx
 - install aws sdk - v3
 - setup sesClient
 - get Access credientails ket form IAM security
+
+# scheduling cron jobs in NodeJS
+
+- Install node-corn
+- cron expression syntax - crontab.guru
+- schedule a job
+- date-fns
+- Send Email
+- Explore Queue mechanism to send bulk emails - bee-queue , bullmq packages
+- Amazon SES Bulk Emails
+- Make sendEmail function dynamic
+
+
 

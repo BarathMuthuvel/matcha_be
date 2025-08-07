@@ -52,6 +52,16 @@ const userSchema = new mongoose.Schema({
       }
     },
   },
+  isPremium: {
+    type: Boolean,
+    default: false,
+  },
+  membershipType: {
+    type: String,
+  },
+  membershipExpiry: {
+    type: Date,
+  },
 });
 
 userSchema.index({ firstName: 1, lastName: 1 }); // Compound index for faster search by name
