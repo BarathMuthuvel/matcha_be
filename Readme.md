@@ -19,6 +19,8 @@ pm2 stop npm
 
 pm2 delete npm
 
+pm2 restart 0
+
 Proxy Pass Setup
 
 sudo nano /etc/nginx/sites-available/default
